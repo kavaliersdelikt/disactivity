@@ -88,10 +88,15 @@ export default function GameLauncher() {
     }, [])
 
     useEffect(() => {
+        const normalizeSearchText = (value: string) =>
+            value.toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, "")
+
         const terms = searchQuery
             .toLowerCase()
             .split(",")
             .map((term) => term.trim())
+            .filter(Boolean)
+            .map(normalizeSearchText)
             .filter(Boolean)
 
         setCurrentPage(1)
@@ -102,9 +107,9 @@ export default function GameLauncher() {
         }
 
         const results = games.filter((game) => {
-            const gameName = game.name.toLowerCase()
-            const gameId = game.id.toLowerCase()
-            const gameAliases = game.aliases?.map((alias) => alias.toLowerCase()) || []
+            const gameName = normalizeSearchText(game.name)
+            const gameId = normalizeSearchText(game.id)
+            const gameAliases = game.aliases?.map(normalizeSearchText) || []
 
             return terms.some((term) => {
                 if (gameName.includes(term)) return true

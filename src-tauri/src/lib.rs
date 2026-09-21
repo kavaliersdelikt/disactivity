@@ -10,7 +10,7 @@ use tauri::Manager;
 const DISCORD_GAMES_API_URL: &str = "https://discord.com/api/v9/games/detectable";
 const DISCORD_NON_GAMES_API_URL: &str = "https://discord.com/api/v9/applications/non-games/detectable";
 
-const CACHE_FILE_NAME: &str = "disactivity_games_cache.json";
+const CACHE_FILE_NAME: &str = "disactivity_games_cache_v2.json";
 const FAVORITES_FILE_NAME: &str = "disactivity_favorites.json";
 const CACHE_EXPIRY_DAYS: i64 = 2;
 
@@ -43,6 +43,7 @@ pub struct Game {
     pub icon_hash: Option<String>,
     #[serde(default)]
     pub executables: Option<Vec<Executable>>,
+    #[serde(default)]
     pub aliases: Vec<String>,
 }
 
@@ -115,6 +116,22 @@ fn write_favorites(favorites: &HashSet<String>) -> Result<(), String> {
     Ok(())
 }
 
+fn add_known_executable_fallbacks(games: &mut [Game]) {
+    for game in games {
+        if game.executables.as_ref().is_some_and(|executables| !executables.is_empty()) {
+            continue;
+        }
+
+        let normalized_name = game.name.to_ascii_lowercase();
+        if normalized_name.contains("wardogs") || normalized_name.contains("war dogs") {
+            game.executables = Some(vec![Executable {
+                name: "WARDOGS.exe".to_string(),
+                os: Some("win32".to_string()),
+            }]);
+        }
+    }
+}
+
 async fn fetch_from_api() -> Result<Vec<Game>, String> {
     let client = reqwest::Client::new();
     let response_games = client
@@ -148,11 +165,8 @@ async fn fetch_from_api() -> Result<Vec<Game>, String> {
         games.extend(non_games);
     }
 
-    Ok(games.iter().filter(|game| {
-        game.executables
-            .as_ref()
-            .map_or(false, |execs| !execs.is_empty())
-    }).cloned().collect())
+    add_known_executable_fallbacks(&mut games);
+    Ok(games)
 }
 
 #[tauri::command]
