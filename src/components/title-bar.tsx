@@ -12,7 +12,9 @@ import {
     RotateCw,
     Loader2,
     Activity,
-    StopCircle, SquareActivity
+    StopCircle,
+    SquareActivity,
+    PanelTopClose
 } from "lucide-react"
 
 import { getCurrentWindow } from "@tauri-apps/api/window"
@@ -89,6 +91,10 @@ export function TitleBar({ runningGames = new Map(), onStopGame }: TitleBarProps
         }
         const window = getCurrentWindow()
         await window.close()
+    }
+
+    const handleHideToTray = async () => {
+        await getCurrentWindow().hide()
     }
 
     useEffect(() => {
@@ -378,6 +384,17 @@ export function TitleBar({ runningGames = new Map(), onStopGame }: TitleBarProps
                 <Button variant="secondary" size="icon" onClick={toggleTheme} className="h-8 w-8 max-sm:h-7 max-sm:w-7">
                     {isDark ? <Sun className="h-5 w-5"/> : <Moon className="h-5 w-5"/>}
                 </Button>
+
+                <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button variant="secondary" size="icon" onClick={handleHideToTray} className="h-8 w-8 max-sm:h-7 max-sm:w-7">
+                                <PanelTopClose className="h-4 w-4" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">Hide to tray</TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
 
                 {/* Minimize - Yellow */}
                 <button

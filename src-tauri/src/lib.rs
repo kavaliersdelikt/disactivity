@@ -5,6 +5,8 @@ use std::fs;
 use std::path::PathBuf;
 use std::process::{Child, Command};
 use std::sync::Mutex;
+use tauri::menu::{Menu, MenuItem};
+use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
 use tauri::Manager;
 
 const DISCORD_GAMES_API_URL: &str = "https://discord.com/api/v9/games/detectable";
@@ -418,9 +420,47 @@ pub fn run() {
             remove_favorite,
             toggle_favorite
         ])
+        .setup(|app| {
+            let show_item = MenuItem::with_id(app, "show", "Show Disactivity", true, None::<&str>)?;
+            let quit_item = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
+            let menu = Menu::with_items(app, &[&show_item, &quit_item])?;
+
+            TrayIconBuilder::new()
+                .menu(&menu)
+                .tooltip("Disactivity")
+                .on_menu_event(|app, event| match event.id.as_ref() {
+                    "show" => {
+                        if let Some(window) = app.get_webview_window("main") {
+                            let _ = window.show();
+                            let _ = window.set_focus();
+                        }
+                    }
+                    "quit" => app.exit(0),
+                    _ => {}
+                })
+                .on_tray_icon_event(|tray, event| {
+                    if let TrayIconEvent::Click {
+                        button: MouseButton::Left,
+                        button_state: MouseButtonState::Up,
+                        ..
+                    } = event
+                    {
+                        if let Some(window) = tray.app_handle().get_webview_window("main") {
+                            let _ = window.show();
+                            let _ = window.set_focus();
+                        }
+                    }
+                })
+                .build(app)?;
+
+            Ok(())
+        })
         .on_window_event(|window, event| {
-            if let tauri::WindowEvent::CloseRequested { .. } = event {
-                // Cleanup all games when window is closed
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                api.prevent_close();
+                let _ = window.hide();
+            }
+            if let tauri::WindowEvent::Destroyed = event {
                 if let Some(state) = window.try_state::<AppState>() {
                     cleanup_all_games(state.inner());
                 }
