@@ -6,15 +6,15 @@
 
 <p align="center">
   <strong>Discord Activity Simulator</strong><br>
-  Simulate game activity on Discord by running fake game processes that Discord can detect.
+  Simulate game activity on Discord by running fake game processes that Discord can detect. NEW: Support for Games with no executables.
 </p>
 
 <p align="center">
-  <a href="https://github.com/holasoyender/disactivity/releases/latest">
-    <img src="https://img.shields.io/github/v/release/holasoyender/disactivity?style=flat-square" alt="Latest Release">
+  <a href="https://github.com/kavaliersdelikt/disactivity/releases/latest">
+    <img src="https://img.shields.io/github/v/release/kavaliersdelikt/disactivity?style=flat-square" alt="Latest Release">
   </a>
   <a href="https://github.com/holasoyender/disactivity/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/holasoyender/disactivity?style=flat-square" alt="License">
+    <img src="https://img.shields.io/github/license/kavaliersdelikt/disactivity?style=flat-square" alt="License">
   </a>
 </p>
 
@@ -42,7 +42,7 @@ The app fetches the complete list of detectable games directly from Discord's AP
 
 ## 📥 Download
 
-Download the latest version from the [GitHub Releases](https://github.com/holasoyender/disactivity/releases/latest) page.
+Download the latest version from the [GitHub Releases](https://github.com/kavaliersdelikt/disactivity/releases/latest) page.
 
 
 ## 🚀 How It Works
@@ -104,21 +104,7 @@ If Discord does not provide an executable name, Disactivity uses a cleaned-up ve
 
 The built application will be available in `src-tauri/target/release/bundle/`. On Windows, the installer is created in the `nsis` subdirectory.
 
-## 📁 Project Structure
 
-```
-disactivity/
-├── src/                    # Frontend (React + TypeScript)
-│   ├── components/         # UI Components
-│   ├── i18n/              # Internationalization
-│   │   └── locales/       # Translation files
-│   └── lib/               # Utilities
-├── src-tauri/             # Backend (Rust + Tauri)
-│   ├── src/               # Rust source code
-│   ├── slave/             # Slave executable (the fake game process)
-│   └── icons/             # Application icons
-└── public/                # Static assets
-```
 
 ## 🛡️ Privacy & Safety
 
