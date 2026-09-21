@@ -300,7 +300,6 @@ export function TitleBar({ runningGames = new Map(), onStopGame }: TitleBarProps
                             <DropdownMenuSeparator />
                             {runningGamesArray.map(({ game, isLoading, startTime }) => {
                                 const elapsed = Date.now() - startTime
-                                const progress = Math.min((elapsed / (15 * 60 * 1000)) * 100, 100)
                                 return (
                                 <DropdownMenuItem
                                     key={game.id}
@@ -319,15 +318,6 @@ export function TitleBar({ runningGames = new Map(), onStopGame }: TitleBarProps
                                         <p className="text-sm font-medium truncate">{game.name}</p>
                                         <div className="flex items-center gap-1.5">
                                             <span className="text-xs text-green-500 font-medium">{formatElapsedTime(elapsed)}</span>
-                                            <span className="text-[10px] text-muted-foreground">/ 15:00</span>
-                                        </div>
-                                        <div className="mt-1 h-1 rounded-full bg-muted/50 overflow-hidden">
-                                            <div
-                                                className={`h-full rounded-full transition-all duration-1000 ease-linear ${
-                                                    progress >= 100 ? "bg-green-500" : "bg-primary"
-                                                }`}
-                                                style={{ width: `${progress}%` }}
-                                            />
                                         </div>
                                     </div>
                                     <Button

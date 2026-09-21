@@ -43,8 +43,6 @@ function getGameIconUrl(game: Game, size: number = 64): string {
     return "https://cdn.discordapp.com/embed/avatars/0.png"
 }
 
-const FIFTEEN_MINUTES_MS = 15 * 60 * 1000
-
 function formatElapsedTime(ms: number): string {
     const totalSeconds = Math.floor(ms / 1000)
     const hours = Math.floor(totalSeconds / 3600)
@@ -70,8 +68,6 @@ export function GameCard({ game, isRunning, isLoading, isFavorite, startTime, on
         }, 1000)
         return () => clearInterval(interval)
     }, [isRunning, startTime])
-
-    const progress = Math.min((elapsed / FIFTEEN_MINUTES_MS) * 100, 100)
 
     const win32Executables = (game.executables || []).filter(
         (exe) => exe.os === "win32" && !exe.name.startsWith(">")
@@ -146,17 +142,9 @@ export function GameCard({ game, isRunning, isLoading, isFavorite, startTime, on
                 </div>
                 <span className="block truncate max-w-full text-xs text-muted-foreground font-mono max-sm:text-[10px]">{t("gameCard.id")}: {game.id}</span>
                 {isRunning && (
-                    <div className="mt-1.5 flex items-center gap-2">
-                        <div className="flex-1 h-1.5 rounded-full bg-muted/50 overflow-hidden">
-                            <div
-                                className={`h-full rounded-full transition-all duration-1000 ease-linear ${
-                                    progress >= 100 ? "bg-green-500" : "bg-primary"
-                                }`}
-                                style={{ width: `${progress}%` }}
-                            />
-                        </div>
+                    <div className="mt-1.5">
                         <span className="text-[10px] text-muted-foreground whitespace-nowrap shrink-0 max-sm:hidden">
-                            {formatElapsedTime(elapsed)} / 15:00
+                            {formatElapsedTime(elapsed)}
                         </span>
                     </div>
                 )}

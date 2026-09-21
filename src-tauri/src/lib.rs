@@ -123,9 +123,23 @@ fn add_known_executable_fallbacks(games: &mut [Game]) {
         }
 
         let normalized_name = game.name.to_ascii_lowercase();
-        if normalized_name.contains("wardogs") || normalized_name.contains("war dogs") {
+        let fallback_name = if normalized_name.contains("wardogs") || normalized_name.contains("war dogs") {
+            "WARDOGS.exe".to_string()
+        } else {
+            let name = game
+                .name
+                .chars()
+                .filter(|character| !matches!(character, '<' | '>' | ':' | '"' | '/' | '\\' | '|' | '?' | '*'))
+                .collect::<String>()
+                .split_whitespace()
+                .collect::<Vec<_>>()
+                .join(" ");
+            format!("{}.exe", name.trim())
+        };
+
+        if fallback_name != ".exe" {
             game.executables = Some(vec![Executable {
-                name: "WARDOGS.exe".to_string(),
+                name: fallback_name,
                 os: Some("win32".to_string()),
             }]);
         }
@@ -175,8 +189,10 @@ async fn fetch_games(force_refresh: bool) -> Result<FetchGamesResponse, String> 
     if !force_refresh {
         if let Some(cache) = read_cache() {
             if is_cache_valid(&cache) {
+                let mut games = cache.games;
+                add_known_executable_fallbacks(&mut games);
                 return Ok(FetchGamesResponse {
-                    games: cache.games,
+                    games,
                     from_cache: true,
                 });
             }
