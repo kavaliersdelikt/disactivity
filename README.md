@@ -33,7 +33,10 @@ The app fetches the complete list of detectable games directly from Discord's AP
 ## ✨ Features
 
 - 🎮 **Thousands of Games** - Browse and search through Discord's complete detectable games database
+- 🔎 **Flexible Search** - Search matches names, IDs, and aliases without being affected by spaces or punctuation
 - ⭐ **Favorites** - Mark your most-used games for quick access
+- 🧩 **Executable Fallbacks** - Games without executable data from Discord remain available, with a best-effort process name generated from the game name
+- ⏱️ **Live Runtime** - Running games show their actual elapsed time without an artificial time limit
 - 🔄 **Auto-Updates** - Built-in updater to keep the app up to date (WIP)
 - 🌐 **Multi-language** - Available in English and Spanish
 
@@ -54,16 +57,19 @@ Download the latest version from the [GitHub Releases](https://github.com/holaso
 
 Disactivity works by:
 1. Fetching the list of detectable games from Discord's API
-2. When you select a game, it creates a temporary executable with the same name as the game's actual executable
-3. Discord's game detection scans for running processes with known executable names
-4. Discord recognizes the process and displays the game activity on your profile
-5. When stopped, the temporary files are automatically cleaned up
+2. Keeping games in the list even when Discord does not provide executable metadata
+3. When you select a game, it creates a temporary executable with the same name as the game's actual executable
+4. Discord's game detection scans for running processes with known executable names
+5. Discord recognizes the process and displays the game activity on your profile
+6. When stopped, the temporary files are automatically cleaned up
+
+If Discord does not provide an executable name, Disactivity uses a cleaned-up version of the game name as a fallback. WarDogs is handled explicitly with `WARDOGS.exe`. These fallbacks are best-effort because Discord's actual process name is not available in the API response.
 
 ## 🔧 Building from Source
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/)
+- [Node.js](https://nodejs.org/) and npm
 - [Rust](https://www.rust-lang.org/tools/install) (latest stable)
 
 ### Build Steps
@@ -76,7 +82,7 @@ Disactivity works by:
 
 2. **Install dependencies**
    ```bash
-   bun install
+    npm install
    ```
 
 3. **Build the slave executable** (required before building the main app)
@@ -88,15 +94,15 @@ Disactivity works by:
 
 4. **Run in development mode**
    ```bash
-   bun run tauri dev
+    npm run tauri dev
    ```
 
 5. **Build for production**
    ```bash
-   bun run tauri build
+    npm run tauri build
    ```
 
-The built application will be available in `src-tauri/target/release/bundle/`.
+The built application will be available in `src-tauri/target/release/bundle/`. On Windows, the installer is created in the `nsis` subdirectory.
 
 ## 📁 Project Structure
 
