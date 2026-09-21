@@ -426,7 +426,13 @@ pub fn run() {
             let menu = Menu::with_items(app, &[&show_item, &quit_item])?;
 
             TrayIconBuilder::new()
+                .icon(
+                    app.default_window_icon()
+                        .cloned()
+                        .ok_or("No default application icon configured")?,
+                )
                 .menu(&menu)
+                .show_menu_on_left_click(false)
                 .tooltip("Disactivity")
                 .on_menu_event(|app, event| match event.id.as_ref() {
                     "show" => {
