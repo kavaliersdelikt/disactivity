@@ -10,11 +10,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/holasoyender/disactivity/releases/latest">
-    <img src="https://img.shields.io/github/v/release/holasoyender/disactivity?style=flat-square" alt="Latest Release">
+  <a href="https://github.com/kavaliersdelikt/disactivity/releases/latest">
+    <img src="https://img.shields.io/github/v/release/kavaliersdelikt/disactivity?style=flat-square" alt="Latest Release">
   </a>
-  <a href="https://github.com/holasoyender/disactivity/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/holasoyender/disactivity?style=flat-square" alt="License">
+  <a href="https://github.com/kavaliersdelikt/disactivity/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/kavaliersdelikt/disactivity?style=flat-square" alt="License">
   </a>
 </p>
 
@@ -43,7 +43,7 @@ The app fetches the complete list of detectable games directly from Discord's AP
 
 ## 📥 Download
 
-Download version [v1.1](https://github.com/kavaliersdelikt/disactivity/releases/tag/v1.1) from GitHub Releases.
+Download version [v1.1.1](https://github.com/kavaliersdelikt/disactivity/releases/) from GitHub Releases.
 
 
 ## 🚀 How It Works
